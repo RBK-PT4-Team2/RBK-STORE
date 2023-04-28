@@ -1,7 +1,7 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
+import axios from "axios";
 import { useShoppingCart } from "../context/ShoppingCartContext";
 import { formatCurrency } from "../utilities/formatCurrency";
-import storeItems from "../data/products.json";
 import {
   MdOutlineRemoveShoppingCart,
   MdOutlineDeleteSweep,
@@ -19,13 +19,27 @@ type CartItemsType = {
   name_product: string;
   price: number;
 };
+type storeItem = {
+  idproducts: number;
+  quantity: number;
+  image_url: string;
+  name_product: string;
+  price: number;
+}
 const CartCard = ({ id, quantity }: CartItemsType) => {
+  
+  const [storeItems, setStoreItems] = useState<storeItem[]>([]);
+  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
+  useShoppingCart();
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/products")
+      .then((res) => setStoreItems(res.data))})
   // get item information using id
   const item = storeItems.find((i) => i.idproducts === id);
   if (item == null) return null;
   // get shopping cart methods
-  const { removeFromCart, increaseCartQuantity, decreaseCartQuantity } =
-    useShoppingCart();
+ 
 
   return (
     <div className="mb-2 bg-slate-50 p-1 flex items-center">
