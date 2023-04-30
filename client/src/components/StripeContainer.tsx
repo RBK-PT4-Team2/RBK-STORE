@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import Stripe from "stripe";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import axios, { AxiosError } from "axios";
+import "../CheckoutForm.css"
+import { Form, Button } from 'react-bootstrap';
+import { CountryDropdown } from 'react-country-region-selector';
+
 
 interface StripeContainerProps {
   amount: number;
@@ -16,6 +20,9 @@ const StripeContainer: React.FC<StripeContainerProps> = ({ amount ,handlePurchas
   const [processing, setProcessing] = useState<boolean>(false);
   const stripe = useStripe();
   const elements = useElements();
+  const [country, setCountry] = useState("");
+  const [name, setName] = useState("");
+
 
   useEffect(() => { 
     // Convert the amount to cents
@@ -68,12 +75,54 @@ const StripeContainer: React.FC<StripeContainerProps> = ({ amount ,handlePurchas
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <CardElement />
-      <button type="submit" disabled={processing}>
-        {processing ? 'Processing...' : 'Pay Now'}
-      </button>
-    </form>
+    <div className="checkout-container w-1/3">
+
+
+      &nbsp;
+      &nbsp;
+
+      <Form onSubmit={handleSubmit} className="payment-form">
+      <Form.Group controlId="name">
+          <Form.Label><strong>Name on Card:</strong></Form.Label>
+          <Form.Control
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="John Doe"
+            required
+          />
+        </Form.Group>
+
+        
+        &nbsp;&nbsp;
+
+        <Form.Group controlId="country">
+          <Form.Label><strong>Country:</strong></Form.Label>
+          <CountryDropdown
+            value={country}
+            onChange={(val) => setCountry(val)}
+            className="form-control"
+            required
+          />
+        </Form.Group>
+        &nbsp;
+
+        <Form.Group controlId="card">
+
+          <Form.Label><strong>Card Information:</strong></Form.Label>
+
+          &nbsp;
+          <CardElement
+
+          />
+        </Form.Group>
+        <br />
+        &nbsp;
+
+        <Button variant="primary" type="submit" >Pay</Button>
+      </Form>
+
+    </div>
   );
 };
 
