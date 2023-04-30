@@ -50,7 +50,7 @@ const Store: React.FC = () => {
   
 
   return (
-    <div className="row">
+    <div className="row ">
       <FilterStore
         allData={allData}
         categories={categories}
